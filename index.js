@@ -22,7 +22,7 @@ app.use(bodyParser.json())
 const mongoose = require('mongoose')
 main().catch(err => console.log(err))
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/StudyMate')
+  await mongoose.connect('mongodb+srv://sparta:hmB2Z8oFEDJWcaqa@cluster0.pajthdd.mongodb.net/?retryWrites=true&w=majority')
 }
 
 // socket
@@ -39,7 +39,6 @@ const io = new Server(server, {
 io.on('connection', socket => {
   socket.on('send-message', (message, topic, sender) => {
     const time = new Date().toString()
-    console.log("masuk");
     axios.post('http://localhost:4000/api/create-pesan', {
       pesan: message,
       sender: sender,

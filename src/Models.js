@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 // modul user
 const userSchema = new Schema({
     name: String,
-    email: String,
+    username: String,
     password: String,
     photoProfile: String
 })
@@ -12,6 +12,7 @@ const user = mongoose.model('user', userSchema)
 
 // modul topic
 const topicSchema = new Schema({
+    name: String,
     subject: String,
     description: String,
     date: String,

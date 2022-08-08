@@ -24,7 +24,7 @@ const models = require('./Models')
 exports.buatUser = async (req, res) => {
     const user = new models.user({
         name: req.body.name,
-        email: req.body.email,
+        username: req.body.username,
         password: req.body.password,
         photoProfile: "-",
     })
@@ -40,17 +40,23 @@ exports.buatUser = async (req, res) => {
 // login user
 exports.loginUser = async (req, res) => {
     // cek apakah akun ada berdasar email dan password benar
-    const akunAda = await models.user.findOne({email: req.query.email})
+    const akunAda = await models.user.findOne({username: req.query.username})
     if (akunAda){
         const passwordBenar = req.query.password === akunAda.password
         if(passwordBenar){
             res.send(akunAda)
         }else{
-            res.status(400).send({msg:'email or password wrong'})
+            res.status(400).send({msg:'username or password wrong'})
         }
     }else{
-        res.status(400).send({msg: 'email or password wrong'})
+        res.status(400).send({msg: 'username or password wrong'})
     }
+}
+
+// get user
+exports.getUser = async (req, res) => {
+    const user = await models.user.findOne({_id: req.query._id})
+    res.status(400).send(user.username)
 }
 
 
@@ -58,6 +64,7 @@ exports.loginUser = async (req, res) => {
 exports.createTopic = async (req, res) => {
     const time = new Date().toString()
     const topic = new models.topic({
+        name: req.body.name,
         subject: req.body.subject,
         description: req.body.description,
         date: time.substring(4,24),
@@ -74,7 +81,7 @@ exports.createTopic = async (req, res) => {
 
 // update topic
 exports.updateTopic = async (req, res) => {
-    const ticket = await models.ticket.findOneAndUpdate({_id: req.body._id}, {users: req.body.users}, {new: true})
+    const ticket = await models.topic.findOneAndUpdate({_id: req.body._id}, {users: req.body.users}, {new: true})
     res.status(200).send(ticket)
 }
 
@@ -91,7 +98,7 @@ exports.createPesan = async (req, res) => {
         pesan: req.body.pesan,
         date: time.substring(4,24),
         sender: req.body.sender,
-        topicId: req.body.topic,
+        topicId: req.body.topicId,
     })
 
     try{
