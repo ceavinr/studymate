@@ -60,35 +60,58 @@ exports.getUser = async (req, res) => {
 }
 
 
-// create topic
-exports.createTopic = async (req, res) => {
+// create room
+exports.createRoom = async (req, res) => {
     const time = new Date().toString()
-    const topic = new models.topic({
+    const room = new models.room({
         name: req.body.name,
-        subject: req.body.subject,
+        topic: req.body.topic,
         description: req.body.description,
         date: time.substring(4,24),
         users: [req.body.user],
     })
 
+    const topic = await models.topic.findOne({name: req.body.topic})
+    if(topic){
+        await models.topic.findOneAndUpdate({name: req.body.topic}, {count: topic.count+1}, {new: true})
+    }else{
+        const topic = new models.topic({
+            name: req.body.topic,
+            count: 1
+        })
+        await topic.save()
+    }
+
     try{
-        const saveTopic = await topic.save()
-        res.status(200).send(saveTopic)
+        const saveRoom = await room.save()
+        res.status(200).send(saveRoom)
     }catch{
         res.status(400).send(err)
     }
 }
 
-// update topic
-exports.updateTopic = async (req, res) => {
-    const ticket = await models.topic.findOneAndUpdate({_id: req.body._id}, {users: req.body.users}, {new: true})
-    res.status(200).send(ticket)
+// update room
+exports.updateRoom = async (req, res) => {
+    const room = await models.room.findOneAndUpdate({_id: req.body._id}, {users: req.body.users}, {new: true})
+    res.status(200).send(room)
 }
 
-// get topic
-exports.getTopic = async (req, res) => { 
-    topic = await models.topic.find()
-    res.status(200).send(topic)
+// get room
+exports.getRoom = async (req, res) => { 
+    const room = await models.room.find()
+    res.status(200).send(room)
+}
+
+// get room name
+exports.getRoomName = async (req, res) => {
+    const room = await models.room.findOne({_id: req.query._id})
+    res.status(200).send(room.name)
+}
+
+// get topics
+exports.getTopics = async (req,res) => {
+    const topics = await models.topic.find()
+    res.status(200).send(topics)
 }
 
 // create pesan
@@ -98,7 +121,7 @@ exports.createPesan = async (req, res) => {
         pesan: req.body.pesan,
         date: time.substring(4,24),
         sender: req.body.sender,
-        topicId: req.body.topicId,
+        roomId: req.body.roomId,
     })
 
     try{
@@ -111,6 +134,12 @@ exports.createPesan = async (req, res) => {
 
 // get pesan
 exports.getPesan = async (req, res) => {
-    const pesan = await models.pesan.find({topicId: req.query.topic})
+    const pesan = await models.pesan.find({roomId: req.query.room})
     res.status(200).send(pesan)
+}
+
+// get last pesan 
+exports.getLastPesan = async (req, res) => {
+    const pesan = await models.pesan.find()
+    res.send(pesan.slice(-3))
 }

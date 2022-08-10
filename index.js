@@ -37,16 +37,16 @@ const io = new Server(server, {
 })
 
 io.on('connection', socket => {
-  socket.on('send-message', (message, topic, sender) => {
+  socket.on('send-message', (message, room, sender) => {
     const time = new Date().toString()
     axios.post('http://localhost:4000/api/create-pesan', {
       pesan: message,
       sender: sender,
-      topicId: topic,
+      roomId: room,
       date: time.substring(4,24),
     }).then(
       res => {
-        io.to(topic).emit('receive-message', res.data)
+        io.to(room).emit('receive-message', res.data)
       }
     ).catch(
       err => {

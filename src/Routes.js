@@ -8,13 +8,18 @@ app.get('/login', Controllers.loginUser)
 app.get('/get-user', Controllers.getUser)
 // app.post('/create-profile', Controllers.uploadPhotoProfile, Controllers.buatPhotoProfile)
 
+// room
+app.post('/create-room', Controllers.createRoom)
+app.get('/get-rooms', Controllers.getRoom)
+app.post('/update-room', Controllers.updateRoom)
+app.get('/get-room-name', Controllers.getRoomName)
+
 // topic
-app.post('/create-topic', Controllers.createTopic)
-app.get('/get-topics', Controllers.getTopic)
-app.post('/update-topic', Controllers.updateTopic)
+app.get('/get-topics', Controllers.getTopics)
 
 // pesan
 app.post('/create-pesan', Controllers.createPesan)
 app.get('/get-pesan', Controllers.getPesan)
+app.get('/get-last-pesan', Controllers.getLastPesan)
 
 module.exports = app

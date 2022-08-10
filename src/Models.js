@@ -10,14 +10,23 @@ const userSchema = new Schema({
 })
 const user = mongoose.model('user', userSchema)
 
-// modul topic
-const topicSchema = new Schema({
+// modul room
+const roomSchema = new Schema({
     name: String,
-    subject: String,
+    topic: String,
     description: String,
     date: String,
     users: Array,
 })
+const room = mongoose.model('room', roomSchema)
+
+// modul topic
+
+const topicSchema = new Schema({
+    name: String,
+    count: Number
+})
+
 const topic = mongoose.model('topic', topicSchema)
 
 // modul pesan
@@ -25,7 +34,7 @@ const pesanSchema = new Schema({
     pesan: String,
     date: String,
     sender: String,
-    topicId: String,
+    roomId: String,
 })
 const pesan = mongoose.model('pesan', pesanSchema)
 
@@ -33,5 +42,6 @@ const pesan = mongoose.model('pesan', pesanSchema)
 module.exports = {
     user,
     topic,
+    room,
     pesan
 }
